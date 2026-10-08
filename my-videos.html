@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Videos - Emmy Pics to Video AI</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
+header { padding: 20px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { color: #a855f7; }
+header a { color: #d8b4fe; text-decoration: none; font-size: 14px; font-weight: 700; padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+.container { width: 92%; max-width: 900px; margin: 35px auto; }
+h1 { font-size: 30px; margin-bottom: 8px; }
+.subtitle { color: #999; margin-bottom: 28px; }
+#loading { text-align: center; color: #aaa; padding: 50px 10px; }
+#empty { display: none; text-align: center; border: 1px solid #252525; background: #101017; border-radius: 18px; padding: 45px 20px; }
+#empty h2 { margin-bottom: 10px; }
+#empty p { color: #999; margin-bottom: 25px; }
+.button { display: inline-block; background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; text-decoration: none; padding: 13px 22px; border-radius: 10px; font-weight: bold; }
+#videos { display: grid; gap: 18px; }
+.video-card { background: #111; border: 1px solid #262626; border-radius: 16px; padding: 20px; }
+.video-card h3 { font-size: 17px; margin-bottom: 10px; }
+.prompt { color: #bbb; line-height: 1.5; margin-bottom: 15px; word-break: break-word; }
+.status { display: inline-block; padding: 7px 11px; border-radius: 20px; background: #24183a; color: #b98aff; font-size: 12px; margin-bottom: 15px; text-transform: capitalize; }
+.status.completed { background: #14321c; color: #9cffb0; }
+.status.failed { background: #3a1616; color: #ff9c9c; }
+.status.pending { background: #24183a; color: #b98aff; }
+.view-button { display: inline-block; background: #1d1d1d; border: 1px solid #333; color: white; text-decoration: none; padding: 10px 15px; border-radius: 9px; font-size: 14px; }
+.notice { margin-top: 30px; padding: 15px; background: #15101e; border: 1px solid #302044; border-radius: 12px; color: #aaa; font-size: 13px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Emmy <span>AI</span></div>
+    <a href="dashboard.html">← Dashboard</a>
+</header>
+
+<div class="container">
+    <h1>My Videos</h1>
+    <p class="subtitle">View your previous video requests.</p>
+
+    <div id="loading">Loading your videos...</div>
+
+    <div id="empty">
+        <h2>No videos yet</h2>
+        <p>You haven't created any video requests yet.</p>
+        <a href="create-video.html" class="button">Create Your First Video</a>
+    </div>
+
+    <div id="videos"></div>
+
+    <div class="notice">
+        <strong>Testing Mode:</strong><br>
+        Your video requests are saved to the Emmy AI database. The real AI video generator will be connected later.
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@23.0.0"></script>
+<script src="appwrite.js"></script>
+
+<script>
+async function loadVideos() {
+    const loading = document.getElementById("loading");
+    const empty = document.getElementById("empty");
+    const videos = document.getElementById("videos");
+
+    try {
+        const user = await getCurrentUser();
+        if (!user) { window.location.href = "login.html"; return; }
+
+        const result = await tablesDB.listRows({
+            databaseId: DATABASE_ID,
+            tableId: VIDEOS_TABLE_ID,
+            queries: [
+                Appwrite.Query.equal("userId", user.$id),
+                Appwrite.Query.orderDesc("$createdAt")
+            ]
+        });
+
+        loading.style.display = "none";
+
+        if (!result.rows || result.rows.length === 0) {
+            empty.style.display = "block";
+            return;
+        }
+
+        result.rows.forEach(function (row) {
+            const card = document.createElement("div");
+            card.className = "video-card";
+            const prompt = row.prompt || "No prompt provided";
+            const status = row.status || "pending";
+            card.innerHTML =
+                '<h3>Video Request</h3>' +
+                '<div class="prompt">' + escapeHtml(prompt) + '</div>' +
+                '<div class="status ' + escapeHtml(status) + '">' + escapeHtml(status) + '</div>' +
+                '<br>' +
+                '<a href="video-result.html?id=' + encodeURIComponent(row.$id) + '" class="view-button">View Request</a>';
+            videos.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error(error);
+        loading.innerHTML = "Unable to load your videos. Please refresh the page.";
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+loadVideos();
+</script>
+
+</body>
+</html>
