@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Video - Emmy Pics to Video AI</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
+header { padding: 20px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { color: #a855f7; }
+header a { color: #d8b4fe; text-decoration: none; font-size: 14px; font-weight: 700; padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+.container { max-width: 650px; margin: 40px auto; padding: 20px; }
+h1 { text-align: center; font-size: 32px; margin-bottom: 10px; }
+.subtitle { text-align: center; color: #999; margin-bottom: 25px; line-height: 1.5; }
+.card { background: #101017; border: 1px solid #292936; border-radius: 18px; padding: 25px; }
+.notice { background: #171322; border: 1px solid #57328a; padding: 15px; border-radius: 12px; color: #c9a7ff; margin-bottom: 25px; line-height: 1.5; font-size: 14px; }
+label { display: block; margin-bottom: 10px; font-weight: bold; }
+input[type="file"] { width: 100%; padding: 14px; background: #0b0b12; border: 1px solid #383848; border-radius: 10px; color: #aaa; margin-bottom: 20px; }
+textarea { width: 100%; min-height: 140px; resize: vertical; padding: 15px; background: #0b0b12; border: 1px solid #383848; border-radius: 10px; color: white; font-size: 15px; outline: none; margin-bottom: 20px; font-family: inherit; }
+textarea:focus { border-color: #8b5cf6; }
+.preview { display: none; width: 100%; max-height: 350px; object-fit: contain; border-radius: 12px; margin-bottom: 20px; background: #08080d; }
+.btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+.primary { background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; }
+.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.message { text-align: center; margin-top: 18px; color: #aaa; line-height: 1.5; }
+.back { display: block; text-align: center; margin-top: 20px; color: #a855f7; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Emmy <span>AI</span></div>
+    <a href="dashboard.html">← Dashboard</a>
+</header>
+
+<div class="container">
+    <h1>Create Your Video</h1>
+    <p class="subtitle">Upload a picture and describe the video you want Emmy AI to create.</p>
+
+    <div class="card">
+        <div class="notice">
+            🎬 <strong>Website Testing Mode</strong><br>
+            Your video request will be saved to the Emmy AI database. The real AI video generator will be connected later.
+        </div>
+
+        <form id="videoForm">
+            <label for="image">Upload Picture</label>
+            <input type="file" id="image" accept="image/png,image/jpeg,image/jpg" required>
+            <img id="preview" class="preview" alt="Image preview">
+
+            <label for="prompt">Describe Your Video</label>
+            <textarea id="prompt" placeholder="Example: Make the person slowly smile while the camera moves closer..." required></textarea>
+
+            <button type="submit" id="generateButton" class="btn primary">🎬 Generate Video</button>
+        </form>
+
+        <p id="message" class="message"></p>
+        <a href="dashboard.html" class="back">← Back to Dashboard</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@23.0.0"></script>
+<script src="appwrite.js"></script>
+
+<script>
+const imageInput = document.getElementById("image");
+const promptInput = document.getElementById("prompt");
+const preview = document.getElementById("preview");
+const videoForm = document.getElementById("videoForm");
+const generateButton = document.getElementById("generateButton");
+const message = document.getElementById("message");
+
+async function checkLogin() {
+    const user = await getCurrentUser();
+    if (!user) { window.location.href = "login.html"; return null; }
+    return user;
+}
+
+imageInput.addEventListener("change", function () {
+    const file = imageInput.files[0];
+    if (!file) { preview.style.display = "none"; return; }
+    const allowed = ["image/jpeg", "image/jpg", "image/png"];
+    if (!allowed.includes(file.type)) {
+        message.style.color = "#ff7777";
+        message.textContent = "Please select a JPG, JPEG, or PNG image.";
+        imageInput.value = "";
+        preview.style.display = "none";
+        return;
+    }
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+    message.textContent = "";
+});
+
+videoForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const file = imageInput.files[0];
+    const prompt = promptInput.value.trim();
+    if (!file) { message.style.color = "#ff7777"; message.textContent = "Please upload a picture."; return; }
+    if (!prompt) { message.style.color = "#ff7777"; message.textContent = "Please describe the video you want."; return; }
+
+    generateButton.disabled = true;
+    generateButton.textContent = "Saving request...";
+    message.style.color = "#aaa";
+    message.textContent = "Please wait...";
+
+    try {
+        const user = await checkLogin();
+        if (!user) return;
+        const rowId = "video_" + Date.now() + "_" + Math.random().toString(36).substring(2, 8);
+        await tablesDB.createRow({
+            databaseId: DATABASE_ID,
+            tableId: VIDEOS_TABLE_ID,
+            rowId: rowId,
+            data: {
+                userId: user.$id,
+                prompt: prompt,
+                imageUrl: "",
+                videoUrl: "",
+                status: "pending"
+            }
+        });
+        message.style.color = "#9cffb0";
+        message.textContent = "✅ Your video request has been saved!";
+        setTimeout(function () {
+            window.location.href = "video-result.html?id=" + encodeURIComponent(rowId);
+        }, 900);
+    } catch (error) {
+        console.error("VIDEO REQUEST ERROR:", error);
+        message.style.color = "#ff7777";
+        message.textContent = error.message || "Something went wrong. Please try again.";
+        generateButton.disabled = false;
+        generateButton.textContent = "🎬 Generate Video";
+    }
+});
+</script>
+
+</body>
+</html>
