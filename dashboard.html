@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Emmy Pics to Video AI</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
+header { padding: 18px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { color: #a855f7; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.videos-btn { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 13px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+.logout-btn { color: white; padding: 9px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); cursor: pointer; font-size: 13px; font-weight: 600; }
+main { width: 100%; max-width: 1150px; margin: auto; padding: 40px 6% 70px; }
+.welcome { margin-bottom: 28px; }
+.welcome h1 { font-size: 32px; line-height: 1.15; margin-bottom: 12px; }
+.welcome h1 span { color: #a855f7; }
+.welcome p { color: #a6a6b3; font-size: 15px; line-height: 1.6; }
+#userEmail { color: #d8b4fe; word-break: break-word; font-weight: 600; }
+.test-notice { background: linear-gradient(135deg, rgba(139,92,246,0.16), rgba(168,85,247,0.05)); border: 1px solid rgba(139,92,246,0.30); border-radius: 16px; padding: 18px 20px; margin-bottom: 28px; display: flex; gap: 14px; align-items: flex-start; }
+.test-icon { width: 38px; height: 38px; min-width: 38px; border-radius: 10px; background: rgba(139,92,246,0.20); display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.test-notice h3 { font-size: 15px; margin-bottom: 5px; }
+.test-notice p { color: #aaa; font-size: 13px; line-height: 1.5; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 30px; }
+.card { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 22px; }
+.card-icon { width: 45px; height: 45px; border-radius: 12px; background: rgba(139,92,246,0.15); display: flex; align-items: center; justify-content: center; font-size: 21px; margin-bottom: 16px; }
+.card h3 { font-size: 14px; color: #a7a7b5; margin-bottom: 8px; font-weight: 500; }
+.card strong { font-size: 22px; }
+.create-card { position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(139,92,246,0.17), rgba(20,20,30,0.75)); border: 1px solid rgba(139,92,246,0.25); border-radius: 22px; padding: 32px; margin-bottom: 30px; }
+.create-card h2 { font-size: 25px; margin-bottom: 10px; position: relative; z-index: 2; }
+.create-card p { color: #aaa; line-height: 1.6; max-width: 650px; margin-bottom: 22px; position: relative; z-index: 2; font-size: 15px; }
+.create-btn { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #a855f7); color: white; text-decoration: none; padding: 14px 22px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 30px rgba(139,92,246,0.20); position: relative; z-index: 2; }
+.videos-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 22px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.videos-card h2 { font-size: 20px; margin-bottom: 7px; }
+.videos-card p { color: #9999a5; font-size: 14px; line-height: 1.5; }
+.view-btn { padding: 12px 18px; border-radius: 11px; background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.25); color: #d8b4fe; text-decoration: none; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.section-title { font-size: 21px; margin-bottom: 16px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.step { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px; }
+.step-number { width: 34px; height: 34px; border-radius: 50%; background: #8b5cf6; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px; }
+.step h3 { margin-bottom: 7px; font-size: 16px; }
+.step p { color: #9999a5; font-size: 14px; line-height: 1.5; }
+footer { text-align: center; color: #666673; font-size: 13px; padding: 30px 20px; }
+#loading { position: fixed; inset: 0; background: #08080d; display: flex; align-items: center; justify-content: center; z-index: 999; }
+.loader { text-align: center; }
+.spinner { width: 38px; height: 38px; border: 3px solid rgba(255,255,255,0.10); border-top-color: #a855f7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
+.loader p { color: #999; font-size: 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 750px) {
+    .cards { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .videos-card { flex-direction: column; align-items: flex-start; }
+    .view-btn { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading your dashboard...</p>
+    </div>
+</div>
+
+<header>
+    <div class="logo">Emmy <span>AI</span></div>
+    <div class="header-actions">
+        <a href="my-videos.html" class="videos-btn">🎬 My Videos</a>
+        <button class="logout-btn" id="logoutButton">Logout</button>
+    </div>
+</header>
+
+<main>
+    <div class="welcome">
+        <h1>Welcome to <span>Emmy AI</span></h1>
+        <p>Turn your pictures into creative AI-generated videos.<br>Signed in as: <span id="userEmail">Loading...</span></p>
+    </div>
+
+    <div class="test-notice">
+        <div class="test-icon">🧪</div>
+        <div>
+            <h3>Website Testing Mode</h3>
+            <p>Payment is currently disabled while we finish building Emmy Pics to Video AI. You can explore the website without making a payment.</p>
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card"><div class="card-icon">🎬</div><h3>Video Creation</h3><strong>Ready</strong></div>
+        <div class="card"><div class="card-icon">✨</div><h3>AI Studio</h3><strong>Available</strong></div>
+        <div class="card"><div class="card-icon">🚀</div><h3>Status</h3><strong>Testing</strong></div>
+    </div>
+
+    <div class="create-card">
+        <h2>Create your first AI video 🎥</h2>
+        <p>Upload a picture and tell Emmy AI what you want to happen in the video. Your image and prompt will be used when the AI video generation system is connected.</p>
+        <a href="create-video.html" class="create-btn">✨ Create Video</a>
+    </div>
+
+    <div class="videos-card">
+        <div>
+            <h2>🎬 My Videos</h2>
+            <p>View the videos you have created with Emmy AI.</p>
+        </div>
+        <a href="my-videos.html" class="view-btn">View My Videos →</a>
+    </div>
+
+    <h2 class="section-title">How Emmy AI works</h2>
+    <div class="steps">
+        <div class="step"><div class="step-number">1</div><h3>Upload a picture</h3><p>Choose a photo from your phone or computer.</p></div>
+        <div class="step"><div class="step-number">2</div><h3>Describe your video</h3><p>Enter a prompt describing how you want your picture to come alive.</p></div>
+        <div class="step"><div class="step-number">3</div><h3>Generate</h3><p>Emmy AI will process your request when the AI generation API is connected.</p></div>
+    </div>
+</main>
+
+<footer>© 2026 Emmy Pics to Video AI. All rights reserved.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@23.0.0"></script>
+<script src="appwrite.js"></script>
+
+<script>
+const loading = document.getElementById("loading");
+const userEmail = document.getElementById("userEmail");
+const logoutButton = document.getElementById("logoutButton");
+
+async function loadDashboard() {
+    try {
+        const user = await getCurrentUser();
+        if (!user) { window.location.href = "login.html"; return; }
+        if (!user.emailVerification) {
+            try { await account.deleteSession({ sessionId: "current" }); } catch (e) {}
+            window.location.href = "login.html";
+            return;
+        }
+        userEmail.textContent = user.email;
+        loading.style.display = "none";
+    } catch (error) {
+        console.error(error);
+        window.location.href = "login.html";
+    }
+}
+
+logoutButton.addEventListener("click", async function () {
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Logging out...";
+    try {
+        await account.deleteSession({ sessionId: "current" });
+        window.location.href = "login.html";
+    } catch (error) {
+        console.error(error);
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Logout";
+        alert("Unable to logout. Please try again.");
+    }
+});
+
+loadDashboard();
+</script>
+
+</body>
+</html>
