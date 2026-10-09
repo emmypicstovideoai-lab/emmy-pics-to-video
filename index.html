@@ -10,18 +10,43 @@
     <link rel="icon" type="image/jpeg" href="logo.jpg">
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Home page specific tweaks */
+        .hero-logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 50px rgba(139,92,246,0.45);
+        }
+
+        @media (max-width: 600px) {
+            .hero-logo {
+                width: 110px;
+                height: 110px;
+                margin-bottom: 20px;
+            }
+            /* Simplify home header on mobile */
+            .home-header nav a:not(.nav-cta) {
+                display: none;
+            }
+            .home-header nav a.nav-cta {
+                display: inline-block;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
+<header class="home-header">
     <a href="index.html" class="logo-link">
-        <img src="logo.jpg" alt="Emmy AI" class="logo-img">
         <span class="logo-text">Emmy <span>AI</span></span>
     </a>
 
     <nav>
-        <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="login.html">Login</a>
         <a href="register.html" class="nav-cta">Sign Up</a>
@@ -29,6 +54,8 @@
 </header>
 
 <section class="hero">
+
+    <img src="logo.jpg" alt="Emmy AI Logo" class="hero-logo">
 
     <h1>
         Turn Your Pictures Into
@@ -104,7 +131,7 @@
 
         <div class="card">
             <h3>Is my data private?</h3>
-            <p>Yes. Only you can see your own video requests. Read our <a href="privacy.html" style="color:#a855f7;">Privacy Policy</a> for details.</p>
+            <p>Yes. Only you can see your own video requests. Read our <a href="privacy.html">Privacy Policy</a> for details.</p>
         </div>
 
     </div>
