@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Videos - Emmy Pics to Video AI</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
-header { padding: 20px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.logo span { color: #a855f7; }
-header a { color: #d8b4fe; text-decoration: none; font-size: 14px; font-weight: 700; padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+header { padding: 16px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logo-text span { color: #a855f7; }
+.back-link { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
 .container { width: 92%; max-width: 900px; margin: 35px auto; }
 h1 { font-size: 30px; margin-bottom: 8px; }
 .subtitle { color: #999; margin-bottom: 28px; }
@@ -34,8 +37,11 @@ h1 { font-size: 30px; margin-bottom: 8px; }
 <body>
 
 <header>
-    <div class="logo">Emmy <span>AI</span></div>
-    <a href="dashboard.html">← Dashboard</a>
+    <a href="dashboard.html" class="logo-link">
+        <img src="logo.jpg" alt="Emmy AI" class="logo-img">
+        <span class="logo-text">Emmy <span>AI</span></span>
+    </a>
+    <a href="dashboard.html" class="back-link">← Dashboard</a>
 </header>
 
 <div class="container">
@@ -66,11 +72,9 @@ async function loadVideos() {
     const loading = document.getElementById("loading");
     const empty = document.getElementById("empty");
     const videos = document.getElementById("videos");
-
     try {
         const user = await getCurrentUser();
         if (!user) { window.location.href = "login.html"; return; }
-
         const result = await tablesDB.listRows({
             databaseId: DATABASE_ID,
             tableId: VIDEOS_TABLE_ID,
@@ -79,14 +83,11 @@ async function loadVideos() {
                 Appwrite.Query.orderDesc("$createdAt")
             ]
         });
-
         loading.style.display = "none";
-
         if (!result.rows || result.rows.length === 0) {
             empty.style.display = "block";
             return;
         }
-
         result.rows.forEach(function (row) {
             const card = document.createElement("div");
             card.className = "video-card";
@@ -100,7 +101,6 @@ async function loadVideos() {
                 '<a href="video-result.html?id=' + encodeURIComponent(row.$id) + '" class="view-button">View Request</a>';
             videos.appendChild(card);
         });
-
     } catch (error) {
         console.error(error);
         loading.innerHTML = "Unable to load your videos. Please refresh the page.";
