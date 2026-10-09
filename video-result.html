@@ -4,17 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Video Result - Emmy Pics to Video AI</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
-header { padding: 20px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.logo span { color: #a855f7; }
-header a { color: #d8b4fe; text-decoration: none; font-size: 14px; font-weight: 700; padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+header { padding: 16px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logo-text span { color: #a855f7; }
+.back-link { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
 .container { max-width: 700px; margin: 40px auto; padding: 20px; }
 h1 { text-align: center; font-size: 32px; margin-bottom: 10px; }
 .subtitle { text-align: center; color: #999; margin-bottom: 30px; }
-.card { background: #101017; border: 1px solid #292936; border-radius: 18px; padding: 25px; margin-bottom: 20px; }
+.card { background: #101017; border: 1px solid #292936; border-radius: 18px; padding: 25px; }
 .status { text-align: center; padding: 20px; border-radius: 12px; background: #171322; border: 1px solid #57328a; color: #c9a7ff; margin-bottom: 25px; line-height: 1.6; }
 .status-icon { font-size: 42px; margin-bottom: 10px; }
 .status strong { display: block; font-size: 18px; margin-bottom: 6px; }
@@ -32,8 +35,11 @@ h1 { text-align: center; font-size: 32px; margin-bottom: 10px; }
 <body>
 
 <header>
-    <div class="logo">Emmy <span>AI</span></div>
-    <a href="dashboard.html">← Dashboard</a>
+    <a href="dashboard.html" class="logo-link">
+        <img src="logo.jpg" alt="Emmy AI" class="logo-img">
+        <span class="logo-text">Emmy <span>AI</span></span>
+    </a>
+    <a href="dashboard.html" class="back-link">← Dashboard</a>
 </header>
 
 <div class="container">
@@ -83,24 +89,19 @@ async function loadVideoRequest() {
     try {
         const user = await getCurrentUser();
         if (!user) { window.location.href = "login.html"; return; }
-
         const params = new URLSearchParams(window.location.search);
         const videoId = params.get("id");
         if (!videoId) { throw new Error("No video request ID was provided."); }
-
         const row = await tablesDB.getRow({
             databaseId: DATABASE_ID,
             tableId: VIDEOS_TABLE_ID,
             rowId: videoId
         });
-
         if (row.userId !== user.$id) {
             throw new Error("You do not have permission to view this video request.");
         }
-
         promptBox.textContent = row.prompt || "No prompt";
         const status = row.status || "pending";
-
         if (status === "completed") {
             statusIcon.textContent = "🎉";
             statusTitle.textContent = "Video Ready";
@@ -115,7 +116,6 @@ async function loadVideoRequest() {
             statusTitle.textContent = "Video Pending";
             statusText.textContent = "Your video request has been received and saved. The AI video generator will be connected later.";
         }
-
         loading.style.display = "none";
         content.style.display = "block";
     } catch (error) {
