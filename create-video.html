@@ -7,14 +7,14 @@
 <link rel="icon" type="image/jpeg" href="logo.jpg">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
+body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; display: flex; flex-direction: column; }
 header { padding: 16px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 10px; }
 .logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
 .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
 .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
 .logo-text span { color: #a855f7; }
 .back-link { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
-.container { max-width: 650px; margin: 40px auto; padding: 20px; }
+.container { max-width: 650px; margin: 40px auto; padding: 20px; flex: 1; width: 100%; }
 h1 { text-align: center; font-size: 32px; margin-bottom: 10px; }
 .subtitle { text-align: center; color: #999; margin-bottom: 25px; line-height: 1.5; }
 .card { background: #101017; border: 1px solid #292936; border-radius: 18px; padding: 25px; }
@@ -28,6 +28,10 @@ textarea:focus { border-color: #8b5cf6; }
 .primary { background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; }
 .primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .message { text-align: center; margin-top: 18px; color: #aaa; line-height: 1.5; }
+footer { text-align: center; color: #666673; font-size: 13px; padding: 30px 20px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 40px; }
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 15px; }
+.footer-links a { color: #a6a6b3; text-decoration: none; font-size: 13px; }
+.footer-links a:hover { color: #d8b4fe; }
 </style>
 </head>
 <body>
@@ -64,6 +68,17 @@ textarea:focus { border-color: #8b5cf6; }
         <p id="message" class="message"></p>
     </div>
 </div>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+    </div>
+    <p>© 2026 Emmy Pics to Video AI. All rights reserved.</p>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/appwrite@23.0.0"></script>
 <script src="appwrite.js"></script>
