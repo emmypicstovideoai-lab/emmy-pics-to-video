@@ -1,6 +1,6 @@
 /*
  * Emmy Pics to Video AI - Shared Styles
- * Used mainly by index.html
+ * Used mainly by index.html and info pages
  */
 
 * {
@@ -20,7 +20,7 @@ body {
 
 header {
     width: 100%;
-    padding: 20px 7%;
+    padding: 16px 7%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,32 +30,61 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+    gap: 10px;
 }
 
-.logo {
-    font-size: 22px;
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.logo-text {
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.5px;
 }
 
-.logo span {
+.logo-text span {
     color: #8b5cf6;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 nav a {
     color: #d8b4fe;
     text-decoration: none;
-    margin-left: 12px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    padding: 9px 14px;
+    padding: 8px 12px;
     border-radius: 10px;
     border: 1px solid rgba(168,85,247,0.35);
     background: rgba(139,92,246,0.10);
+    transition: background 0.2s ease;
 }
 
 nav a:hover {
     background: rgba(139,92,246,0.20);
+}
+
+.nav-cta {
+    background: linear-gradient(90deg, #7c3aed, #a855f7) !important;
+    border-color: transparent !important;
+    color: white !important;
 }
 
 /* ---------- Hero ---------- */
@@ -109,6 +138,7 @@ nav a:hover {
     cursor: pointer;
     font-size: 15px;
     font-family: inherit;
+    transition: filter 0.2s ease;
 }
 
 .primary {
@@ -130,7 +160,7 @@ nav a:hover {
     background: rgba(255,255,255,0.05);
 }
 
-/* ---------- Testing notice ---------- */
+/* ---------- Testing badge ---------- */
 
 .testing-badge {
     display: inline-block;
@@ -158,8 +188,10 @@ nav a:hover {
 
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 .card {
@@ -181,6 +213,15 @@ nav a:hover {
     font-size: 14px;
 }
 
+.card a {
+    color: #a855f7;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
 /* ---------- Footer ---------- */
 
 footer {
@@ -189,4 +230,24 @@ footer {
     color: #777;
     border-top: 1px solid #242432;
     font-size: 13px;
+    margin-top: 40px;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #a6a6b3;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #d8b4fe;
 }
