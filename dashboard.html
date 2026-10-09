@@ -4,15 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Emmy Pics to Video AI</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Arial, sans-serif; background: radial-gradient(circle at top right, rgba(139,92,246,0.18), transparent 35%), radial-gradient(circle at bottom left, rgba(168,85,247,0.10), transparent 35%), #08080d; color: white; min-height: 100vh; }
-header { padding: 18px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.logo span { color: #a855f7; }
+header { padding: 14px 6%; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(8,8,13,0.88); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 10px; }
+.logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logo-text span { color: #a855f7; }
 .header-actions { display: flex; align-items: center; gap: 8px; }
-.videos-btn { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 13px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
-.logout-btn { color: white; padding: 9px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); cursor: pointer; font-size: 13px; font-weight: 600; }
+.videos-btn { color: #d8b4fe; text-decoration: none; font-size: 13px; font-weight: 700; padding: 8px 13px; border-radius: 10px; border: 1px solid rgba(168,85,247,0.35); background: rgba(139,92,246,0.10); }
+.logout-btn { color: white; padding: 8px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); cursor: pointer; font-size: 13px; font-weight: 600; }
 main { width: 100%; max-width: 1150px; margin: auto; padding: 40px 6% 70px; }
 .welcome { margin-bottom: 28px; }
 .welcome h1 { font-size: 32px; line-height: 1.15; margin-bottom: 12px; }
@@ -53,6 +56,7 @@ footer { text-align: center; color: #666673; font-size: 13px; padding: 30px 20px
     .steps { grid-template-columns: 1fr; }
     .videos-card { flex-direction: column; align-items: flex-start; }
     .view-btn { width: 100%; text-align: center; }
+    .logo-text { font-size: 18px; }
 }
 </style>
 </head>
@@ -66,7 +70,10 @@ footer { text-align: center; color: #666673; font-size: 13px; padding: 30px 20px
 </div>
 
 <header>
-    <div class="logo">Emmy <span>AI</span></div>
+    <a href="dashboard.html" class="logo-link">
+        <img src="logo.jpg" alt="Emmy AI" class="logo-img">
+        <span class="logo-text">Emmy <span>AI</span></span>
+    </a>
     <div class="header-actions">
         <a href="my-videos.html" class="videos-btn">🎬 My Videos</a>
         <button class="logout-btn" id="logoutButton">Logout</button>
